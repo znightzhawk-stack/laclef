@@ -42,31 +42,52 @@ jobs:
           5. 내일 우선 실행할 업무 5가지
           6. 각 업무의 우선순위, 실행 방법, 기대 결과
 
-          실제 회사 자료나 업무 입력은 아직 제공되지 않았다.
-          따라서 실제로 수행한 업무, 매출, 실적, 회의 결과를
-          지어내지 말고, 일반적인 점검 과제와 실행 제안으로
-          구분해서 작성하라. 확인이 필요한 정보는 명시하라.
-          간결하고 전문적인 임원 보고서 형식으로 작성하라.
+          실제 회사 자료나 업무 입력은 제공되지 않았다.
+          실제 업무 수행, 매출, 실적, 회의 결과를 지어내지 말라.
+          일반적인 점검 과제와 실행 제안으로 구분하고,
+          확인이 필요한 정보는 명시하라.
+          전문적인 임원 보고서 형식으로 작성하라.
           PROMPT
 
           jq -n --rawfile prompt prompt.txt \
             '{contents:[{parts:[{text:$prompt}]}]}' > request.json
 
-          curl --fail-with-body -sS \
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent" \
-            -H "x-goog-api-key: $GEMINI_API_KEY" \
-            -H "Content-Type: application/json" \
-            -X POST \
-            -d @request.json \
-            -o response.json
+          SUCCESS=false
+
+          for attempt in 1 2 3 4; do
+            echo "Gemini API attempt $attempt of 4"
+
+            if curl --fail-with-body -sS \
+              "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent" \
+              -H "x-goog-api-key: $GEMINI_API_KEY" \
+              -H "Content-Type: application/json" \
+              -X POST \
+              -d @request.json \
+              -o response.json; then
+              SUCCESS=true
+              break
+            fi
+
+            if [ "$attempt" -lt 4 ]; then
+              sleep $((attempt * 10))
+            fi
+          done
+
+          if [ "$SUCCESS" != "true" ]; then
+            echo "Gemini API request failed after 4 attempts."
+            if [ -f response.json ]; then
+              jq '{error: .error}' response.json || true
+            fi
+            exit 1
+          fi
 
           REPORT=$(jq -r \
             '[.candidates[0].content.parts[]?.text // empty] | join("\n")' \
             response.json)
 
           if [ -z "$REPORT" ]; then
-            echo "AI response was empty."
-            cat response.json
+            echo "AI response was empty or unexpected."
+            jq '{error: .error, promptFeedback: .promptFeedback}' response.json
             exit 1
           fi
 
