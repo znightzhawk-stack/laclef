@@ -12,6 +12,8 @@ permissions:
 jobs:
   daily-report:
     runs-on: ubuntu-latest
+    timeout-minutes: 3
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -32,20 +34,19 @@ jobs:
 
           cat > prompt.txt <<'PROMPT'
           당신은 기업의 기획실장이다.
-          한국어로 실무에 활용할 수 있는 일일 업무보고서를 작성하라.
+          한국어로 실무에 활용할 일일 업무보고서를 작성하라.
 
-          다음 항목을 포함하라.
-          1. 오늘의 핵심 경영 점검사항 3가지
-          2. 사업개발 및 신규사업 검토사항
+          다음 내용을 포함하라.
+          1. 경영 핵심 점검사항 3가지
+          2. 사업개발 및 신규사업 검토
           3. 마케팅 및 매출 개선 과제
-          4. 재무·비용·리스크 점검사항
-          5. 내일 우선 실행할 업무 5가지
-          6. 각 업무의 우선순위, 실행 방법, 기대 결과
+          4. 재무, 비용 및 리스크 점검
+          5. 다음 업무일의 우선 실행 과제 5가지
+          6. 각 과제의 우선순위, 실행 방법, 기대 결과
 
-          실제 회사 자료나 업무 입력은 제공되지 않았다.
-          실제 업무 수행, 매출, 실적, 회의 결과를 지어내지 말라.
-          일반적인 점검 과제와 실행 제안으로 구분하고,
-          확인이 필요한 정보는 명시하라.
+          실제 회사 자료는 제공되지 않았다.
+          실제 업무, 매출, 실적, 회의 결과를 지어내지 말라.
+          일반적인 점검 과제와 제안임을 명확히 구분하라.
           전문적인 임원 보고서 형식으로 작성하라.
           PROMPT
 
@@ -57,27 +58,32 @@ jobs:
           for attempt in 1 2 3 4; do
             echo "Gemini API attempt $attempt of 4"
 
-            if curl --fail-with-body -sS \
-              "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent" \
+            HTTP_CODE=$(curl -sS \
+              --connect-timeout 10 \
+              --max-time 30 \
+              -w "%{http_code}" \
+              -o response.json \
               -H "x-goog-api-key: $GEMINI_API_KEY" \
               -H "Content-Type: application/json" \
               -X POST \
               -d @request.json \
-              -o response.json; then
+              "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent") || HTTP_CODE="000"
+
+            if [ "$HTTP_CODE" = "200" ]; then
               SUCCESS=true
               break
             fi
 
+            echo "Gemini HTTP status: $HTTP_CODE"
+            jq '{error: .error}' response.json 2>/dev/null || true
+
             if [ "$attempt" -lt 4 ]; then
-              sleep $((attempt * 10))
+              sleep $((attempt * 5))
             fi
           done
 
           if [ "$SUCCESS" != "true" ]; then
-            echo "Gemini API request failed after 4 attempts."
-            if [ -f response.json ]; then
-              jq '{error: .error}' response.json || true
-            fi
+            echo "Gemini API failed after 4 attempts."
             exit 1
           fi
 
