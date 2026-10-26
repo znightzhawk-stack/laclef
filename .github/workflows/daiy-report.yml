@@ -1,3 +1,4 @@
+
 name: Daily AI Report
 
 on:
@@ -15,23 +16,70 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Generate daily report
+      - name: Generate AI report
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
+          set -euo pipefail
+
+          if [ -z "$GEMINI_API_KEY" ]; then
+            echo "GEMINI_API_KEY secret is missing."
+            exit 1
+          fi
+
           mkdir -p reports
           DATE=$(date -u +%Y-%m-%d)
+
+          cat > prompt.txt <<'PROMPT'
+          당신은 기업의 기획실장이다.
+          한국어로 실무에 활용할 수 있는 일일 업무보고서를 작성하라.
+
+          다음 항목을 포함하라.
+          1. 오늘의 핵심 경영 점검사항 3가지
+          2. 사업개발 및 신규사업 검토사항
+          3. 마케팅 및 매출 개선 과제
+          4. 재무·비용·리스크 점검사항
+          5. 내일 우선 실행할 업무 5가지
+          6. 각 업무의 우선순위, 실행 방법, 기대 결과
+
+          실제 회사 자료나 업무 입력은 아직 제공되지 않았다.
+          따라서 실제로 수행한 업무, 매출, 실적, 회의 결과를
+          지어내지 말고, 일반적인 점검 과제와 실행 제안으로
+          구분해서 작성하라. 확인이 필요한 정보는 명시하라.
+          간결하고 전문적인 임원 보고서 형식으로 작성하라.
+          PROMPT
+
+          jq -n --rawfile prompt prompt.txt \
+            '{contents:[{parts:[{text:$prompt}]}]}' > request.json
+
+          curl --fail-with-body -sS \
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent" \
+            -H "x-goog-api-key: $GEMINI_API_KEY" \
+            -H "Content-Type: application/json" \
+            -X POST \
+            -d @request.json \
+            -o response.json
+
+          REPORT=$(jq -r \
+            '[.candidates[0].content.parts[]?.text // empty] | join("\n")' \
+            response.json)
+
+          if [ -z "$REPORT" ]; then
+            echo "AI response was empty."
+            cat response.json
+            exit 1
+          fi
+
           {
-            echo "# Daily Work Report"
-            echo ""
-            echo "- Date (UTC): $DATE"
-            echo "- Status: Scheduled workflow executed successfully."
-            echo ""
-            echo "## Tasks"
-            echo "- Connect an AI model to generate actual work reports."
-            echo "- Configure business-specific reporting templates."
+            echo "# AI 일일 업무보고"
+            echo
+            echo "- 작성일(UTC): $DATE"
+            echo
+            printf '%s\n' "$REPORT"
           } > "reports/daily-report-$DATE.md"
 
-      - name: Save report
+      - name: Save report to repository
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Add daily work report"
+          commit_message: "Add AI daily work report"
           file_pattern: reports/*.md
