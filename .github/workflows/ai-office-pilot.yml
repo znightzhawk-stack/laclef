@@ -1,17 +1,9 @@
-
-name: AI Office Pilot
-
-on:
-  workflow_dispatch:
-  schedule:
-    - cron: "0 0 * * *"
-
-permissions:
-  contents: read
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check automation
-        run: echo "AI Office Pilot is running"
+laclef/
+├── .github/
+│   └── workflows/
+│       └── ai-office-pilot.yml
+├── scripts/
+│   └── ai_office_pilot.py
+└── docs/
+    ├── office-dashboard.html
+    └── office-status.json  ← AI 실행 후 자동 생성
