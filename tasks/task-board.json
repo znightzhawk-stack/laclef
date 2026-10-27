@@ -1,0 +1,41 @@
+{
+  "updated_at": null,
+  "tasks": [
+    {
+      "id": "PILOT-001",
+      "title": "기획부: 오늘의 핵심 업무 3개 선정",
+      "department": "planning",
+      "status": "queued",
+      "priority": 1,
+      "description": "내부 업무 후보를 정하고 우선순위를 매긴다.",
+      "created_by": "seed"
+    },
+    {
+      "id": "PILOT-002",
+      "title": "분석부: 우선순위와 예상 효과 평가",
+      "department": "analysis",
+      "status": "queued",
+      "priority": 2,
+      "description": "기대효과·난이도·리스크를 평가한다.",
+      "created_by": "seed"
+    },
+    {
+      "id": "PILOT-003",
+      "title": "보고부: Markdown 업무보고 작성",
+      "department": "reporting",
+      "status": "queued",
+      "priority": 3,
+      "description": "기획·분석 결과를 보고서로 정리한다.",
+      "created_by": "seed"
+    },
+    {
+      "id": "PILOT-004",
+      "title": "총괄실: 완료 여부 및 다음 업무 기록",
+      "department": "executive",
+      "status": "queued",
+      "priority": 4,
+      "description": "결과를 확인하고 후속 업무를 기록한다.",
+      "created_by": "seed"
+    }
+  ]
+}
