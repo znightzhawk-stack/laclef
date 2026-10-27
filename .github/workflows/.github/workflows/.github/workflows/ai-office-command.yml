@@ -1,0 +1,52 @@
+
+name: AI Office Command
+
+on:
+  workflow_dispatch:
+    inputs:
+      task:
+        description: "ChatGPT에서 작성한 업무 지시를 붙여넣으세요"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ai-office-command
+  cancel-in-progress: false
+
+jobs:
+  run-ai-office:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      GEMINI_MODEL: gemini-2.5-flash
+      OFFICE_TASK: ${{ inputs.task }}
+      PYTHONUNBUFFERED: "1"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run AI Office command
+        run: python scripts/ai_office_command.py
+
+      - name: Save generated report
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/office-status.json reports/
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Generate AI Office report"
+            git push
+          fi
