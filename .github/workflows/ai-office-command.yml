@@ -34,7 +34,16 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.10"
+
+          - name: Install dependencies
+        run: pip install google-generativeai
+
+      - name: Run AI Office Command
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          OFFICE_TASK: ${{ github.event.inputs.task || '사업성 검토 지시' }}
+        run: python scripts/ai_office_command.py
 
       - name: Run AI Office command
         run: python scripts/ai_office_command.py
