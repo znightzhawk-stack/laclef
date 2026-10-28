@@ -1,13 +1,10 @@
-import json
 import os
-import urllib.request
-import urllib.error
+import json
 from datetime import datetime, timezone
 from pathlib import Path
+import google.generativeai as genai
 
 API_KEY = os.environ.get("GEMINI_API_KEY", "")
-# v1beta 엔드포인트에서 지원되는 안정적인 최신 모델명으로 고정합니다.
-MODEL = "gemini-3.8-flash"
 TASK = os.environ.get("OFFICE_TASK", "").strip()
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -25,11 +22,11 @@ def main():
     if not TASK:
         raise RuntimeError("업무 지시가 비어 있습니다.")
 
-    DOCS.mkdir(parents=True, exist_ok=True)
-    REPORTS.mkdir(parents=True, exist_ok=True)
-
-    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    now = datetime.now(timezone.utc).isoformat()
+    # 구글 공식 SDK 설정
+    genai.configure(api_key=API_KEY)
+    
+    # 안정적인 표준 프로덕션 모델 지정
+    model = genai.GenerativeModel('gemini-1.5-flash')
 
     prompt = f"""
 당신은 기업의 AI 기획실입니다.
@@ -49,49 +46,20 @@ def main():
 {TASK}
 """
 
-    payload = {
-        "contents": [{
-            "parts": [{"text": prompt}]
-        }],
-        "generationConfig": {
-            "temperature": 0.3
-        }
-    }
-
-    url = (
-        "https://generativelanguage.googleapis.com/v1beta/"
-        f"models/{MODEL}:generateContent?key={API_KEY}"
-    )
-
-    request = urllib.request.Request(
-        url,
-        data=json.dumps(payload).encode("utf-8"),
-        headers={"Content-Type": "application/json"},
-        method="POST",
-    )
-
     try:
-        with urllib.request.urlopen(request, timeout=120) as response:
-            result = json.loads(response.read().decode("utf-8"))
-    except urllib.error.HTTPError as exc:
-        detail = exc.read().decode("utf-8", errors="replace")
-        raise RuntimeError(
-            f"Gemini API 요청 실패 (HTTP {exc.code}): {detail[:1500]}"
-        ) from exc
-
-    candidates = result.get("candidates", [])
-    if not candidates:
-        raise RuntimeError(
-            "Gemini가 결과를 반환하지 않았습니다. API 응답을 확인하세요."
-        )
-
-    parts = candidates[0].get("content", {}).get("parts", [])
-    report_text = "\n".join(
-        part.get("text", "") for part in parts if part.get("text")
-    ).strip()
+        response = model.generate_content(prompt)
+        report_text = response.text
+    except Exception as exc:
+        raise RuntimeError(f"Gemini API 호출 중 오류 발생: {exc}") from exc
 
     if not report_text:
         raise RuntimeError("Gemini 응답에 보고서 본문이 없습니다.")
+
+    DOCS.mkdir(parents=True, exist_ok=True)
+    REPORTS.mkdir(parents=True, exist_ok=True)
+
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    now = datetime.now(timezone.utc).isoformat()
 
     report_path = REPORTS / f"office-{today}.md"
     report_path.write_text(
