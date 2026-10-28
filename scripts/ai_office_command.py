@@ -6,8 +6,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 API_KEY = os.environ.get("GEMINI_API_KEY", "")
-# 외부 환경변수의 간섭을 받지 않도록 안정적인 모델명으로 강제 고정합니다.
-MODEL = "gemini-1.5-flash"
+# v1beta 엔드포인트에서 지원되는 안정적인 최신 모델명으로 고정합니다.
+MODEL = "gemini-2.0-flash"
 TASK = os.environ.get("OFFICE_TASK", "").strip()
 
 ROOT = Path(__file__).resolve().parents[1]
