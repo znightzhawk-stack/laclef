@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 API_KEY = os.environ.get("GEMINI_API_KEY", "")
-MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+MODEL = os.environ.get("GEMINI_MODEL", "gemini-1.5-flash")
 TASK = os.environ.get("OFFICE_TASK", "").strip()
 
 ROOT = Path(__file__).resolve().parents[1]
