@@ -1,3 +1,13 @@
+name: AI Office Command
+
+on:
+  workflow_dispatch:     
+    inputs:
+      task:
+        description: '업무 지시 내용'
+        required: true
+        default: '사업성 검토 보고서 작성'
+
 import os
 import json
 from datetime import datetime, timezone
