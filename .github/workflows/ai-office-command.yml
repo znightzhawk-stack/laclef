@@ -20,8 +20,9 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install Google SDK
-        run: pip install google-generativeai
+      # 최신 공식 SDK로 변경
+      - name: Install Google GenAI SDK
+        run: pip install google-genai
 
       - name: Run AI Office Command
         env:
