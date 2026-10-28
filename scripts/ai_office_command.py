@@ -1,5 +1,6 @@
 import os
 import json
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from google import genai
@@ -22,7 +23,6 @@ def main():
     if not TASK:
         raise RuntimeError("업무 지시가 비어 있습니다.")
 
-    # 최신 google-genai SDK 클라이언트 초기화
     client = genai.Client(api_key=API_KEY)
 
     prompt = f"""
@@ -43,18 +43,37 @@ def main():
 {TASK}
 """
 
-    try:
-        # 구글 서버가 공식 지정한 최신 모델명 적용
-        response = client.models.generate_content(
-            model='gemini-3.8-flash',
-            contents=prompt,
-        )
-        report_text = response.text
-    except Exception as exc:
-        raise RuntimeError(f"Gemini API 호출 중 오류 발생: {exc}") from exc
+    # 서버 과부하(503) 대응: 1순위 최신 모델과 2순위 안정형 백업 모델 지정
+    target_models = ['gemini-3.8-flash', 'gemini-1.5-pro']
+    response = None
+    last_exception = None
 
-    if not report_text:
-        raise RuntimeError("Gemini 응답에 보고서 본문이 없습니다.")
+    for model_name in target_models:
+        success = False
+        for attempt in range(3):  # 각 모델별 최대 3번 재시도
+            try:
+                print(f"시도 중: {model_name} (시도 횟수 {attempt + 1}/3)")
+                response = client.models.generate_content(
+                    model=model_name,
+                    contents=prompt,
+                )
+                if response and response.text:
+                    success = True
+                    break
+            except Exception as exc:
+                last_exception = exc
+                print(f"경고: {model_name} 호출 중 일시적 오류 발생. 3초 후 재시도합니다... ({exc})")
+                time.sleep(3 * (attempt + 1))  # 점진적으로 대기 시간 증가
+        
+        if success:
+            break
+
+    if not response or not response.text:
+        raise RuntimeError(
+            f"모든 모델 호출 실패 (서버 과부하 또는 네트워크 에러): {last_exception}"
+        )
+
+    report_text = response.text.strip()
 
     DOCS.mkdir(parents=True, exist_ok=True)
     REPORTS.mkdir(parents=True, exist_ok=True)
