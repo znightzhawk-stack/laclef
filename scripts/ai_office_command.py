@@ -2,7 +2,7 @@ import os
 import json
 from datetime import datetime, timezone
 from pathlib import Path
-import google.generativeai as genai
+from google import genai
 
 API_KEY = os.environ.get("GEMINI_API_KEY", "")
 TASK = os.environ.get("OFFICE_TASK", "").strip()
@@ -22,11 +22,8 @@ def main():
     if not TASK:
         raise RuntimeError("업무 지시가 비어 있습니다.")
 
-    # 구글 공식 SDK 설정
-    genai.configure(api_key=API_KEY)
-    
-    # 안정적인 표준 프로덕션 모델 지정
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    # 최신 google-genai SDK 클라이언트 초기화
+    client = genai.Client(api_key=API_KEY)
 
     prompt = f"""
 당신은 기업의 AI 기획실입니다.
@@ -47,7 +44,11 @@ def main():
 """
 
     try:
-        response = model.generate_content(prompt)
+        # 구글 서버가 공식 지정한 최신 모델명 적용
+        response = client.models.generate_content(
+            model='gemini-3.8-flash',
+            contents=prompt,
+        )
         report_text = response.text
     except Exception as exc:
         raise RuntimeError(f"Gemini API 호출 중 오류 발생: {exc}") from exc
