@@ -11,6 +11,9 @@ on:
 jobs:
   run-command:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # <-- 저장소에 파일을 다시 쓰기(Push) 위해 반드시 필요한 권한입니다!
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -20,7 +23,6 @@ jobs:
         with:
           python-version: '3.10'
 
-      # 최신 공식 SDK로 변경
       - name: Install Google GenAI SDK
         run: pip install google-genai
 
@@ -29,3 +31,12 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           OFFICE_TASK: ${{ github.event.inputs.task }}
         run: python scripts/ai_office_command.py
+
+      # 👇 [핵심 추가] 생성된 보고서와 상태 파일을 GitHub 저장소에 자동으로 저장(Push)합니다.
+      - name: Commit and push generated reports
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports/ docs/
+          git diff --staged --quiet || git commit -m "docs: auto-generate AI Office report and status [skip ci]"
+          git push
