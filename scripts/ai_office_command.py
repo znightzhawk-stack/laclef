@@ -6,7 +6,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 API_KEY = os.environ.get("GEMINI_API_KEY", "")
-MODEL = os.environ.get("GEMINI_MODEL", "gemini-1.5-flash")
+# API 에러 가이드에 맞춰 최신 모델명으로 변경했습니다.
+MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.8-flash")
 TASK = os.environ.get("OFFICE_TASK", "").strip()
 
 ROOT = Path(__file__).resolve().parents[1]
