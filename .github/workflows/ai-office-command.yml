@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       task:
-        description: '업무 지시 내용'
+        description: '업무 지시 내용 (예: 서울 역세권 주거용 오피스텔 부지 매입 타당성 검토)'
         required: true
         default: '서울 역세권 주거용 오피스텔 시행 사업성 검토'
 
@@ -12,7 +12,7 @@ jobs:
   run-command:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # <-- 저장소에 파일을 다시 쓰기(Push) 위해 반드시 필요한 권한입니다!
+      contents: write
 
     steps:
       - name: Checkout repository
@@ -32,11 +32,10 @@ jobs:
           OFFICE_TASK: ${{ github.event.inputs.task }}
         run: python scripts/ai_office_command.py
 
-      # 👇 [핵심 추가] 생성된 보고서와 상태 파일을 GitHub 저장소에 자동으로 저장(Push)합니다.
-      - name: Commit and push generated reports
+      - name: Commit and push generated reports and dashboard data
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add reports/ docs/
-          git diff --staged --quiet || git commit -m "docs: auto-generate AI Office report and status [skip ci]"
+          git add reports/ docs/ index.html
+          git diff --staged --quiet || git commit -m "feat: auto-generate developer-grade feasibility report & update dashboard [skip ci]"
           git push
