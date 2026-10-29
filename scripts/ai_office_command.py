@@ -384,25 +384,30 @@ main { max-width: 1400px; margin: auto; padding: 32px 24px; display: grid; gap: 
 </div>
 
 <script>
-const OWNER="znighthawk-stack", REPO="laclef", BRANCH="main";
-const departments=[
- {id:"planning",name:"기획실",desc:"경영 요약 · 일일 보고서 · 실행 우선순위",color:"var(--cyan)",state:"기반 구축",detail:"GitHub Actions 기반 AI 일일 보고서 자동 생성 및 그룹사 총괄 기획 파이프라인이 연동되어 있습니다."},
- {id:"development",name:"사업개발실",desc:"부동산 시행 · 타당성 검토 · 수지분석",color:"var(--indigo)",state:"활성화됨",detail:"부동산 개발 시행 타당성, 토지비 역산, 용적률 산출 및 PF 리스크 검토 리포트 자동 생성 기능이 탑재되어 있습니다."},
- {id:"marketing",name:"마케팅실",desc:"캠페인 기획 · 고객 유입 · 전환 분석",color:"var(--emerald)",state:"구축 예정",detail:"마케팅 실적 및 분양/광고 캠페인 데이터 연동을 통한 성과 분석 모듈입니다."},
- {id:"finance",name:"재무·리스크실",desc:"예산 관리 · 현금흐름(Cash Flow) · 계약 검토",color:"var(--amber)",state:"구축 예정",detail:"재무제표, 자금 조달 구조 및 계약서 독소조항 방어 검토를 위한 전문 분석 모듈입니다."}
+const OWNER = "znighthawk-stack", REPO = "laclef", BRANCH = "main";
+const departments = [
+ {id:"planning", name:"기획실", desc:"경영 요약 · 일일 보고서 · 실행 우선순위", color:"var(--cyan)", state:"기반 구축", detail:"GitHub Actions 기반 AI 일일 보고서 자동 생성 및 그룹사 총괄 기획 파이프라인이 연동되어 있습니다."},
+ {id:"development", name:"사업개발실", desc:"부동산 시행 · 타당성 검토 · 수지분석", color:"var(--indigo)", state:"활성화됨", detail:"부동산 개발 시행 타당성, 토지비 역산, 용적률 산출 및 PF 리스크 검토 리포트 자동 생성 기능이 탑재되어 있습니다."},
+ {id:"marketing", name:"마케팅실", desc:"캠페인 기획 · 고객 유입 · 전환 분석", color:"var(--emerald)", state:"구축 예정", detail:"마케팅 실적 및 분양/광고 캠페인 데이터 연동을 통한 성과 분석 모듈입니다."},
+ {id:"finance", name:"재무·리스크실", desc:"예산 관리 · 현금흐름(Cash Flow) · 계약 검토", color:"var(--amber)", state:"구축 예정", detail:"재무제표, 자금 조달 구조 및 계약서 독소조항 방어 검토를 위한 전문 분석 모듈입니다."}
 ];
-const $=id=>document.getElementById(id);
-function escapeHtml(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&','<':'<','>':'>','"':'"',"'":'''}[c];});}
-function addEvent(title,desc){
-  const feed=$("feed");
-  const item=document.createElement("div");
-  item.className="feed-item";
-  item.innerHTML='<div class="feed-icon">◆</div><div><strong>'+escapeHtml(title)+'</strong><p>'+escapeHtml(desc)+'</p></div>';
-  feed.prepend(item);
-  while(feed.children.length>5) feed.lastChild.remove();
+const $ = id => document.getElementById(id);
+function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function(c) {
+        const map = {'&': '&', '<': '<', '>': '>', '"': '"', "'": '''};
+        return map[c];
+    });
 }
-function renderDepartments(){
-  $("deptList").innerHTML=departments.map(d=>`
+function addEvent(title, desc) {
+  const feed = $("feed");
+  const item = document.createElement("div");
+  item.className = "feed-item";
+  item.innerHTML = '<div class="feed-icon">◆</div><div><strong>' + escapeHtml(title) + '</strong><p>' + escapeHtml(desc) + '</p></div>';
+  feed.prepend(item);
+  while(feed.children.length > 5) feed.lastChild.remove();
+}
+function renderDepartments() {
+  $("deptList").innerHTML = departments.map(d => `
     <div class="dept">
       <div>
         <strong><i class="dept-dot" style="color:${d.color}"></i>${d.name}</strong>
@@ -415,19 +420,19 @@ function renderDepartments(){
     </div>
   `).join("");
 }
-function selectDept(id){
-  const d=departments.find(x=>x.id===id);
-  if(!d)return;
-  $("selectedName").textContent=d.name;
-  $("selectedDesc").textContent=d.desc;
-  $("selectedData").textContent=d.detail;
-  $("modalTitle").textContent=d.name;
-  $("modalText").textContent=d.detail;
+function selectDept(id) {
+  const d = departments.find(x => x.id === id);
+  if(!d) return;
+  $("selectedName").textContent = d.name;
+  $("selectedDesc").textContent = d.desc;
+  $("selectedData").textContent = d.detail;
+  $("modalTitle").textContent = d.name;
+  $("modalText").textContent = d.detail;
   $("modal").classList.add("open");
 }
-function renderBars(){
-  const vals=[["기획실",90],["사업개발실",85],["마케팅실",30],["재무·리스크실",25]];
-  $("bars").innerHTML=vals.map(v=>`
+function renderBars() {
+  const vals = [["기획실", 90], ["사업개발실", 85], ["마케팅실", 30], ["재무·리스크실", 25]];
+  $("bars").innerHTML = vals.map(v => `
     <div class="bar-row">
       <span>${v[0]}</span>
       <div class="bar"><i style="width:${v[1]}%"></i></div>
@@ -435,106 +440,106 @@ function renderBars(){
     </div>
   `).join("");
 }
-async function getJson(url){
-  const r=await fetch(url,{headers:{"Accept":"application/vnd.github+json"},cache:"no-store"});
-  if(!r.ok)throw new Error("HTTP "+r.status);
+async function getJson(url) {
+  const r = await fetch(url, {headers: {"Accept": "application/vnd.github+json"}, cache: "no-store"});
+  if(!r.ok) throw new Error("HTTP " + r.status);
   return r.json();
 }
-function reportUrl(path){
-  return "https://github.com/"+OWNER+"/"+REPO+"/blob/"+BRANCH+"/"+path.split("/").map(encodeURIComponent).join("/");
+function reportUrl(path) {
+  return "https://github.com/" + OWNER + "/" + REPO + "/blob/" + BRANCH + "/" + path.split("/").map(encodeURIComponent).join("/");
 }
-async function loadReports(){
- const container=$("reports");
- try{
-  const files=await getJson("https://api.github.com/repos/"+OWNER+"/"+REPO+"/contents/reports?ref="+BRANCH);
-  if(!Array.isArray(files))throw new Error("reports 폴더를 읽을 수 없습니다.");
-  const md=files.filter(f=>f.type==="file"&&f.name.endsWith(".md")).sort((a,b)=>b.name.localeCompare(a.name)).slice(0,8);
-  $("reportCount").textContent=files.filter(f=>f.type==="file"&&f.name.endsWith(".md")).length;
-  $("reportCountFoot").textContent="GitHub 저장소 연동됨";
-  $("modeValue").textContent="LIVE";
-  $("modeValue").className="value green";
-  $("modeFoot").textContent="실제 데이터 동기화 완료";
-  $("sourceChip").textContent="GitHub 라이브 연동";
-  $("sourceChip").className="chip good";
-  $("dataNotice").innerHTML='<span>✨</span><div>GitHub 저장소와 성공적으로 동기화되었습니다. 최신 타당성 검토 및 그룹사 리포트를 즉시 조회하실 수 있습니다.</div>';
-  $("reportsTag").textContent="실제 파일 목록";
-  $("reportsTag").className="tag live";
-  container.innerHTML="";
-  if(!md.length){
-    container.innerHTML='<div class="empty">reports 폴더에 생성된 보고서가 없습니다. Actions에서 워크플로를 실행해 주세요.</div>';
+async function loadReports() {
+ const container = $("reports");
+ try {
+  const files = await getJson("https://api.github.com/repos/" + OWNER + "/" + REPO + "/contents/reports?ref=" + BRANCH);
+  if(!Array.isArray(files)) throw new Error("reports 폴더를 읽을 수 없습니다.");
+  const md = files.filter(f => f.type === "file" && f.name.endsWith(".md")).sort((a,b) => b.name.localeCompare(a.name)).slice(0,8);
+  $("reportCount").textContent = files.filter(f => f.type === "file" && f.name.endsWith(".md")).length;
+  $("reportCountFoot").textContent = "GitHub 저장소 연동됨";
+  $("modeValue").textContent = "LIVE";
+  $("modeValue").className = "value green";
+  $("modeFoot").textContent = "실제 데이터 동기화 완료";
+  $("sourceChip").textContent = "GitHub 라이브 연동";
+  $("sourceChip").className = "chip good";
+  $("dataNotice").innerHTML = '<span>✨</span><div>GitHub 저장소와 성공적으로 동기화되었습니다. 최신 타당성 검토 및 그룹사 리포트를 즉시 조회하실 수 있습니다.</div>';
+  $("reportsTag").textContent = "실제 파일 목록";
+  $("reportsTag").className = "tag live";
+  container.innerHTML = "";
+  if(!md.length) {
+    container.innerHTML = '<div class="empty">reports 폴더에 생성된 보고서가 없습니다. Actions에서 워크플로를 실행해 주세요.</div>';
     return;
   }
-  md.forEach(f=>{
-    const el=document.createElement("div");
-    el.className="report";
-    const a=document.createElement("a");
-    a.href=reportUrl(f.path);
-    a.target="_blank";
-    a.rel="noopener";
-    a.textContent=f.name;
-    const t=document.createElement("span");
-    t.className="tag live";
-    t.textContent="리포트 파일";
-    el.append(a,t);
+  md.forEach(f => {
+    const el = document.createElement("div");
+    el.className = "report";
+    const a = document.createElement("a");
+    a.href = reportUrl(f.path);
+    a.target = "_blank";
+    a.rel = "noopener";
+    a.textContent = f.name;
+    const t = document.createElement("span");
+    t.className = "tag live";
+    t.textContent = "리포트 파일";
+    el.append(a, t);
     container.append(el);
   });
-  addEvent("보고서 목록 동기화 성공",md.length+"개 파일 로드 완료");
- }catch(e){
-  $("reportCount").textContent="확인 중";
-  $("reportCountFoot").textContent="API 제한 또는 비공개 저장소";
-  $("modeValue").textContent="DEMO";
-  $("modeValue").className="value";
-  $("modeFoot").textContent="예시 데이터 모드";
-  $("sourceChip").textContent="오프라인/스탠바이";
-  $("sourceChip").className="chip";
-  $("reportsTag").textContent="연결 대기";
-  $("reportsTag").className="tag demo";
-  container.innerHTML='<div class="empty">저장소 보고서 목록을 가져오는 중이거나 API 접근이 제한되었습니다. Actions 실행 후 새로고침을 확인해 주세요.</div>';
-  addEvent("저장소 연동 대기",e.message);
+  addEvent("보고서 목록 동기화 성공", md.length + "개 파일 로드 완료");
+ } catch(e) {
+  $("reportCount").textContent = "확인 중";
+  $("reportCountFoot").textContent = "API 제한 또는 비공개 저장소";
+  $("modeValue").textContent = "DEMO";
+  $("modeValue").className = "value";
+  $("modeFoot").textContent = "예시 데이터 모드";
+  $("sourceChip").textContent = "오프라인/스탠바이";
+  $("sourceChip").className = "chip";
+  $("reportsTag").textContent = "연결 대기";
+  $("reportsTag").className = "tag demo";
+  container.innerHTML = '<div class="empty">저장소 보고서 목록을 가져오는 중이거나 API 접근이 제한되었습니다. Actions 실행 후 새로고침을 확인해 주세요.</div>';
+  addEvent("저장소 연동 대기", e.message);
  }
 }
-async function loadRuns(){
- try{
-  const d=await getJson("https://api.github.com/repos/"+OWNER+"/"+REPO+"/actions/runs?per_page=1");
-  const r=d.workflow_runs&&d.workflow_runs[0];
-  if(!r)throw new Error("워크플로 실행 이력 없음");
-  const success=r.conclusion==="success";
-  $("runState").textContent=r.status==="in_progress"?"실행 중":success?"성공":r.conclusion||r.status;
-  $("runState").className="value "+(success?"green":"");
-  $("runDate").textContent=new Date(r.updated_at).toLocaleString("ko-KR",{timeZone:"Asia/Seoul"})+" · "+r.name;
-  $("eventTag").textContent="GitHub Actions";
-  addEvent("최근 워크플로 상태",r.name+" ("+(r.conclusion||r.status)+")");
- }catch(e){
-  $("runState").textContent="대기 중";
-  $("runDate").textContent="워크플로 이력 확인 필요";
-  addEvent("워크플로 미조회",e.message);
+async function loadRuns() {
+ try {
+  const d = await getJson("https://api.github.com/repos/" + OWNER + "/" + REPO + "/actions/runs?per_page=1");
+  const r = d.workflow_runs && d.workflow_runs[0];
+  if(!r) throw new Error("워크플로 실행 이력 없음");
+  const success = r.conclusion === "success";
+  $("runState").textContent = r.status === "in_progress" ? "실행 중" : success ? "성공" : r.conclusion || r.status;
+  $("runState").className = "value " + (success ? "green" : "");
+  $("runDate").textContent = new Date(r.updated_at).toLocaleString("ko-KR", {timeZone: "Asia/Seoul"}) + " · " + r.name;
+  $("eventTag").textContent = "GitHub Actions";
+  addEvent("최근 워크플로 상태", r.name + " (" + (r.conclusion || r.status) + ")");
+ } catch(e) {
+  $("runState").textContent = "대기 중";
+  $("runDate").textContent = "워크플로 이력 확인 필요";
+  addEvent("워크플로 미조회", e.message);
  }
 }
-function refresh(){
-  addEvent("대시보드 새로고침","GitHub 데이터 및 Actions 상태를 다시 조회합니다.");
+function refresh() {
+  addEvent("대시보드 새로고침", "GitHub 데이터 및 Actions 상태를 다시 조회합니다.");
   loadReports();
   loadRuns();
 }
-function clock(){
-  $("clock").textContent=new Date().toLocaleTimeString("ko-KR",{timeZone:"Asia/Seoul",hour12:false})+" KST";
+function clock() {
+  $("clock").textContent = new Date().toLocaleTimeString("ko-KR", {timeZone: "Asia/Seoul", hour12: false}) + " KST";
 }
-document.addEventListener("click",e=>{
-  const b=e.target.closest("[data-dept],[data-open]");
-  if(b) selectDept(b.dataset.dept||b.dataset.open);
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-dept],[data-open]");
+  if(b) selectDept(b.dataset.dept || b.dataset.open);
 });
-$("closeModal").onclick=()=>$("modal").classList.remove("open");
-$("modal").onclick=e=>{if(e.target.id==="modal")$("modal").classList.remove("open");};
-$("rotateBtn").onclick=()=>{
+$("closeModal").onclick = () => $("modal").classList.remove("open");
+$("modal").onclick = e => {if(e.target.id === "modal") $("modal").classList.remove("open");};
+$("rotateBtn").onclick = () => {
   $("iso").classList.toggle("spin");
-  addEvent("가상 사무실 시점 변경","아이소메트릭 3D 공간을 회전했습니다.");
+  addEvent("가상 사무실 시점 변경", "아이소메트릭 3D 공간을 회전했습니다.");
 };
-$("refreshBtn").onclick=refresh;
+$("refreshBtn").onclick = refresh;
 
 renderDepartments();
 renderBars();
 clock();
-setInterval(clock,1000);
-addEvent("통합 관제실 가동","웹 대시보드가 성공적으로 로드되었습니다.");
+setInterval(clock, 1000);
+addEvent("통합 관제실 가동", "웹 대시보드가 성공적으로 로드되었습니다.");
 refresh();
 </script>
 </body>
