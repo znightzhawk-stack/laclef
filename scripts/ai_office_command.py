@@ -1,5 +1,6 @@
 import os
 import json
+import time
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from google import genai
@@ -586,25 +587,30 @@ def main():
 {TASK}
 """
 
-    # 💡 530/503 트래픽 폭주(High Demand) 장애 대응용 자동 폴백 모델 순회 로직
-    models_to_try = ['gemini-3.8-flash', 'gemini-2.5-flash', 'gemini-1.5-flash']
+    # 💡 gemini-3.8-flash 모델 사용 및 일시적 네트워크/서버 끊김(Disconnect) 대응 재시도(Retry) 로직
+    model_name = 'gemini-3.8-flash'
     response = None
-    last_error = None
+    max_retries = 3
 
-    for m in models_to_try:
+    for attempt in range(1, max_retries + 1):
         try:
-            print(f"Trying model: {m}")
-            response = client.models.generate_content(model=m, contents=prompt)
+            print(f"Connecting to model {model_name} (Attempt {attempt}/{max_retries})...")
+            response = client.models.generate_content(
+                model=model_name,
+                contents=prompt
+            )
             if response and response.text:
-                print(f"Success with model: {m}")
+                print("Generation successful.")
                 break
         except Exception as e:
-            print(f"Model {m} encountered an error: {e}")
-            last_error = e
-            continue
+            print(f"Attempt {attempt} failed with error: {e}")
+            if attempt < max_retries:
+                time.sleep(4)  # 4초 대기 후 재시도
+            else:
+                raise RuntimeError(f"모든 AI 모델 호출(재시도 포함)이 실패했습니다. (마지막 에러: {e})")
 
     if not response or not response.text:
-        raise RuntimeError(f"모든 AI 모델 호출이 실패했습니다. (마지막 에러: {last_error})")
+        raise RuntimeError("AI 모델로부터 응답 내용을 받아오지 못했습니다.")
 
     report_text = response.text.strip()
 
