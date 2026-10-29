@@ -16,7 +16,7 @@ INDEX_PATH = ROOT / "index.html"
 
 def generate_dashboard_html():
     """대시보드 HTML을 루트에 자동으로 생성/갱신하는 함수"""
-    html_content = """<!doctype html>
+    html_content = '''<!doctype html>
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -392,7 +392,7 @@ const departments=[
  {id:"finance",name:"재무·리스크실",desc:"예산 관리 · 현금흐름(Cash Flow) · 계약 검토",color:"var(--amber)",state:"구축 예정",detail:"재무제표, 자금 조달 구조 및 계약서 독소조항 방어 검토를 위한 전문 분석 모듈입니다."}
 ];
 const $=id=>document.getElementById(id);
-function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&","<":"<",">":">",'"':""","'":"'"}[c]));}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&','<':'<','>':'>','"':'"',"'":'''}[c];});}
 function addEvent(title,desc){
   const feed=$("feed");
   const item=document.createElement("div");
@@ -539,7 +539,7 @@ refresh();
 </script>
 </body>
 </html>
-"""
+'''
     INDEX_PATH.write_text(html_content, encoding="utf-8")
     print("index.html 자동 생성 완료")
 
@@ -552,7 +552,6 @@ def main():
 
     client = genai.Client(api_key=API_KEY)
 
-    # 엔지니어링 및 지표(KPI) 중심의 초정밀 월가 스타일 프롬프트 적용
     prompt = f"""
 당신은 월가 기관투자자 리서치 센터 및 글로벌 디벨로퍼 그룹사의 수석 데이터/전략 애널리스트입니다.
 대표님께서 내리신 아래의 업무 지시에 대해, 단순한 서술형 글이 아니라 **엔지니어링 수치, KPI 스코어카드, 정량적 데이터 테이블, 리스크 매트릭스**가 촘촘히 박힌 '엔터프라이즈급 정밀 분석 보고서'를 작성하세요.
@@ -611,7 +610,6 @@ def main():
     status_path = DOCS / "office-status.json"
     status_path.write_text(json.dumps(status, ensure_ascii=False, indent=2), encoding="utf-8")
 
-    # 대시보드 HTML 파일 자동 생성 실행
     generate_dashboard_html()
 
     print(f"지표 중심의 엔지니어링 보고서 및 대시보드 갱신 완료")
