@@ -586,8 +586,26 @@ def main():
 {TASK}
 """
 
-    # 💡 최신 권장 모델인 gemini-3.8-flash로 수정 완료
-    response = client.models.generate_content(model='gemini-3.8-flash', contents=prompt)
+    # 💡 530/503 트래픽 폭주(High Demand) 장애 대응용 자동 폴백 모델 순회 로직
+    models_to_try = ['gemini-3.8-flash', 'gemini-2.5-flash', 'gemini-1.5-flash']
+    response = None
+    last_error = None
+
+    for m in models_to_try:
+        try:
+            print(f"Trying model: {m}")
+            response = client.models.generate_content(model=m, contents=prompt)
+            if response and response.text:
+                print(f"Success with model: {m}")
+                break
+        except Exception as e:
+            print(f"Model {m} encountered an error: {e}")
+            last_error = e
+            continue
+
+    if not response or not response.text:
+        raise RuntimeError(f"모든 AI 모델 호출이 실패했습니다. (마지막 에러: {last_error})")
+
     report_text = response.text.strip()
 
     DOCS.mkdir(parents=True, exist_ok=True)
