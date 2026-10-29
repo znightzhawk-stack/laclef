@@ -586,7 +586,8 @@ def main():
 {TASK}
 """
 
-    response = client.models.generate_content(model='gemini-2.5-flash', contents=prompt)
+    # 💡 최신 권장 모델인 gemini-3.8-flash로 수정 완료
+    response = client.models.generate_content(model='gemini-3.8-flash', contents=prompt)
     report_text = response.text.strip()
 
     DOCS.mkdir(parents=True, exist_ok=True)
