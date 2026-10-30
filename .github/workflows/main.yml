@@ -1,0 +1,38 @@
+name: LACLEF Executive Command Center Workflow
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: # 👈 웹사이트에서 수동으로 'Run workflow' 버튼을 누를 수 있게 해주는 기능입니다.
+  schedule:
+    - cron: '0 22 * * *' # 매일 밤 (UTC 기준, 한국 시간 아침 7시) 자동 실행되도록 설정
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    # 💡 [가장 중요] 깃허브 저장소에 결과물(index.html, reports/)을 자동으로 커밋하기 위한 권한 부여
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Run AI Office Command Script
+        run: python scripts/ai_office_command.py
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }} # 👈 시크릿 키를 파이썬 스크립트로 안전하게 전달합니다!
+
+      - name: Commit and Push Generated Reports & Dashboard
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html reports/
+          git commit -m "chore: auto-generate executive dashboard & reports [skip ci]" || exit 0
+          git push
