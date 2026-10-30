@@ -13,6 +13,60 @@ DOCS = ROOT / "docs"
 REPORTS = ROOT / "reports"
 INDEX_PATH = ROOT / "index.html"
 
+def update_static_dashboard():  
+  reports_dir = 'reports'
+  os.makedirs(reports_dir, exist_ok=True)
+  report_files = sorted(
+      glob.glob(os.path.join(reports_dir, '*.md')), reverse=True
+  )
+
+list_items = ''
+  for filepath in report_files:
+    filename = os.path.basename(filepath)
+    title = filename.replace('.md', '').replace('office-', 'Executive Report: ')
+    list_items += f"""
+        <li style="margin-bottom: 12px; padding: 15px; background: #1e293b; border-radius: 8px; border-left: 4px solid #3b82f6;">
+            <a href="reports/{filename}" target="_blank" style="color: #60a5fa; font-weight: bold; text-decoration: none; font-size: 1.1rem;">📄 {filename}</a>
+            <p style="color: #94a3b8; margin: 5px 0 0 0; font-size: 0.9rem;">(주)큐에이치앤씨 엔터프라이즈급 타당성 및 포트폴리오 분석 보고서</p>
+        </li>
+        """
+
+  html_content = f"""<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LACLEF Executive Command Center</title>
+    <style>
+        body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 40px; }}
+        .container {{ max-width: 900px; margin: 0 auto; background: #1e293b; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }}
+        h1 {{ color: #38bdf8; border-bottom: 2px solid #334155; padding-bottom: 15px; margin-top: 0; }}
+        ul {{ list-style: none; padding: 0; }}
+        .footer {{ margin-top: 30px; text-align: center; color: #64748b; font-size: 0.85rem; }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏢 LACLEF Executive Command Center</h1>
+        <p style="color: #94a3b8;">(주)큐에이치앤씨 실시간 부동산 개발 및 글로벌 포트폴리오 관제실</p>
+        <hr style="border: 0; border-top: 1px solid #334155; margin: 20px 0;">
+        
+        <h2>📊 생성된 정밀 분석 보고서 목록</h2>
+        <ul>
+            {list_items if list_items else '<p style="color: #94a3b8;">아직 생성된 보고서가 없습니다.</p>'}
+        </ul>
+        
+        <div class="footer">
+            System Status: <strong>ONLINE (Static Generation Mode)</strong> • Powered by Gemini AI
+        </div>
+    </div>
+</body>
+</html>
+"""
+
+with open('index.html', 'w', encoding='utf-8') as f:
+    f.write(html_content)
+  print('Successfully updated static index.html with all reports.')
 
 def generate_dashboard_html():
     """대시보드 HTML을 루트에 자동으로 생성/갱신하는 함수"""
@@ -647,6 +701,8 @@ def main():
 
     print(f"지표 중심의 엔지니어링 보고서 및 대시보드 갱신 완료")
 
+def main():
+    pass
 
 if __name__ == "__main__":
     main()  
