@@ -35,7 +35,8 @@ def generate_executive_report():
 
   # API 호출 실패 또는 키가 없을 시 기관용 기본 템플릿 적용
   if not report_text:
-    today_str = datetime.datetime.now().strftime("%Y-%m-%d")
+    today_str = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    filename = f'reports/office-{timestamp_str}.md'
     report_text = f"""# LACLEF EXECUTIVE QUANTITATIVE REPORT
 - **Date:** {today_str}
 - **Author:** 이기석 회사 ((앤드원홀딩스(주))
