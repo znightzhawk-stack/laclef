@@ -29,55 +29,33 @@ body {
         radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.06) 0%, transparent 40%),
         radial-gradient(circle at 85% 85%, rgba(129, 140, 248, 0.05) 0%, transparent 40%);
     color: var(--text);
-    font: 13.5kg/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font: 13.5px/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     letter-spacing: -0.01em;
 }
 button { font: inherit; cursor: pointer; transition: all 0.2s ease; }
 
-/* Header */
 header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-    padding: 16px 32px;
-    border-bottom: 1px solid var(--border);
-    background: rgba(3, 7, 18, 0.85);
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    backdrop-filter: blur(16px);
+    display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    padding: 16px 32px; border-bottom: 1px solid var(--border);
+    background: rgba(3, 7, 18, 0.85); position: sticky; top: 0; z-index: 50; backdrop-filter: blur(16px);
 }
 .brand { display: flex; align-items: center; gap: 14px; }
 .logo {
-    width: 40px; height: 40px;
-    display: grid; place-items: center;
+    width: 40px; height: 40px; display: grid; place-items: center;
     background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(129, 140, 248, 0.15));
-    border: 1px solid var(--border-bright);
-    border-radius: 12px;
-    color: var(--cyan);
-    font-weight: 800;
-    font-size: 16px;
-    box-shadow: 0 0 20px rgba(56, 189, 248, 0.15);
+    border: 1px solid var(--border-bright); border-radius: 12px; color: var(--cyan);
+    font-weight: 800; font-size: 16px; box-shadow: 0 0 20px rgba(56, 189, 248, 0.15);
 }
 .brand h1 { font-size: 14px; letter-spacing: 0.12em; margin: 0; font-weight: 700; }
 .brand small { display: block; color: var(--muted); font-size: 10px; letter-spacing: 0.1em; margin-top: 2px; }
 .header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .chip {
-    padding: 6px 12px;
-    border: 1px solid var(--border);
-    border-radius: 9999px;
-    color: var(--muted);
-    font-size: 11px;
-    font-weight: 500;
-    background: var(--surface);
-    display: flex;
-    align-items: center;
+    padding: 6px 12px; border: 1px solid var(--border); border-radius: 9999px;
+    color: var(--muted); font-size: 11px; font-weight: 500; background: var(--surface); display: flex; align-items: center;
 }
 .chip.good { color: var(--emerald); border-color: rgba(52, 211, 153, 0.3); background: rgba(52, 211, 153, 0.05); }
 .led { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--emerald); margin-right: 6px; box-shadow: 0 0 8px var(--emerald); }
 
-/* Main Layout */
 main { max-width: 1400px; margin: auto; padding: 32px 24px; display: grid; gap: 24px; }
 .hero { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 .eyebrow { font-size: 11px; letter-spacing: 0.2em; color: var(--cyan); text-transform: uppercase; font-weight: 600; margin-bottom: 6px; }
@@ -85,39 +63,22 @@ main { max-width: 1400px; margin: auto; padding: 32px 24px; display: grid; gap: 
 .hero p { color: var(--muted); margin: 6px 0 0; font-size: 14px; }
 .actions { display: flex; gap: 10px; flex-wrap: wrap; }
 .btn {
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text);
-    padding: 8px 16px;
-    border-radius: 10px;
-    font-size: 12px;
-    font-weight: 500;
+    border: 1px solid var(--border); background: var(--surface); color: var(--text);
+    padding: 8px 16px; border-radius: 10px; font-size: 12px; font-weight: 500;
 }
 .btn.primary { border-color: rgba(56, 189, 248, 0.4); background: rgba(56, 189, 248, 0.1); color: #bae6fd; }
 .btn:hover { border-color: var(--muted); background: rgba(255, 255, 255, 0.04); }
 .btn.primary:hover { background: rgba(56, 189, 248, 0.18); }
 
-/* Notice Banner */
 .notice {
-    border: 1px solid rgba(251, 191, 36, 0.25);
-    background: rgba(251, 191, 36, 0.05);
-    color: #fde68a;
-    border-radius: 12px;
-    padding: 12px 18px;
-    font-size: 12.5px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    border: 1px solid rgba(251, 191, 36, 0.25); background: rgba(251, 191, 36, 0.05);
+    color: #fde68a; border-radius: 12px; padding: 12px 18px; font-size: 12.5px; display: flex; align-items: center; gap: 10px;
 }
 
-/* Metrics Grid */
 .metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
 .metric, .panel {
-    border: 1px solid var(--border);
-    background: var(--surface-glass);
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(12px);
+    border: 1px solid var(--border); background: var(--surface-glass); border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); backdrop-filter: blur(12px);
 }
 .metric { padding: 20px; }
 .metric .label { color: var(--muted); font-size: 12px; font-weight: 500; }
@@ -126,7 +87,6 @@ main { max-width: 1400px; margin: auto; padding: 32px 24px; display: grid; gap: 
 .metric .value.cyan { color: var(--cyan); text-shadow: 0 0 20px rgba(56, 189, 248, 0.3); }
 .metric .value.green { color: var(--emerald); text-shadow: 0 0 20px rgba(52, 211, 153, 0.3); }
 
-/* Layout Grid */
 .layout { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(320px, 0.9fr); gap: 20px; }
 .panel-head { padding: 18px 22px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .panel-head h3 { font-size: 14px; margin: 0; font-weight: 600; letter-spacing: -0.01em; }
@@ -137,36 +97,24 @@ main { max-width: 1400px; margin: auto; padding: 32px 24px; display: grid; gap: 
 .tag.demo { color: var(--amber); border-color: rgba(251, 191, 36, 0.3); background: rgba(251, 191, 36, 0.05); }
 .tag.live { color: var(--emerald); border-color: rgba(52, 211, 153, 0.3); background: rgba(52, 211, 153, 0.05); }
 
-/* Office Wrap (Isometric 3D) */
 .office-wrap { overflow: hidden; position: relative; min-height: 380px; background: radial-gradient(circle at center, #0f172a 0%, #030712 75%); border-radius: 0 0 16px 16px; padding: 12px; }
 .office-top { display: flex; justify-content: space-between; align-items: center; margin: 0 8px 12px; }
 .office-stage { height: 340px; display: grid; place-items: center; perspective: 1200px; overflow: hidden; }
 .iso {
-    width: min(540px, 95%);
-    aspect-ratio: 1.45;
-    position: relative;
-    transform: rotateX(54deg) rotateZ(-45deg) scale(0.78);
-    transform-style: preserve-3d;
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    filter: drop-shadow(0 25px 35px rgba(0,0,0,0.6));
+    width: min(540px, 95%); aspect-ratio: 1.45; position: relative;
+    transform: rotateX(54deg) rotateZ(-45deg) scale(0.78); transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); filter: drop-shadow(0 25px 35px rgba(0,0,0,0.6));
 }
 .iso.spin { transform: rotateX(54deg) rotateZ(315deg) scale(0.78); }
 .floor {
-    position: absolute; inset: 0;
-    background: linear-gradient(135deg, #0b1329, #060a17);
-    border: 2px solid rgba(56, 189, 248, 0.25);
-    box-shadow: inset 0 0 0 12px #040711, 0 0 0 1px rgba(56, 189, 248, 0.1);
-    transform: translateZ(0);
-    background-image: linear-gradient(rgba(56, 189, 248, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(56, 189, 248, 0.04) 1px, transparent 1px);
+    position: absolute; inset: 0; background: linear-gradient(135deg, #0b1329, #060a17);
+    border: 2px solid rgba(56, 189, 248, 0.25); box-shadow: inset 0 0 0 12px #040711, 0 0 0 1px rgba(56, 189, 248, 0.1);
+    transform: translateZ(0); background-image: linear-gradient(rgba(56, 189, 248, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(56, 189, 248, 0.04) 1px, transparent 1px);
     background-size: 32px 32px;
 }
 .room {
-    position: absolute; width: 42%; height: 42%;
-    border: 2px solid rgba(56, 189, 248, 0.35);
-    background: rgba(15, 23, 42, 0.85);
-    transform-style: preserve-3d;
-    box-shadow: 8px 8px 0 rgba(2, 6, 23, 0.6);
-    transition: all 0.2s;
+    position: absolute; width: 42%; height: 42%; border: 2px solid rgba(56, 189, 248, 0.35);
+    background: rgba(15, 23, 42, 0.85); transform-style: preserve-3d; box-shadow: 8px 8px 0 rgba(2, 6, 23, 0.6); transition: all 0.2s;
 }
 .room:hover { border-color: var(--cyan); background: rgba(30, 41, 59, 0.9); }
 .room:before, .room:after { content: ""; position: absolute; background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(56, 189, 248, 0.2); }
@@ -174,46 +122,32 @@ main { max-width: 1400px; margin: auto; padding: 32px 24px; display: grid; gap: 
 .room:after { height: 100%; width: 24px; right: -24px; top: 0; transform: skewX(-35deg); transform-origin: left; background: rgba(15, 30, 53, 0.4); }
 .room button { position: absolute; inset: 0; border: 0; background: transparent; cursor: pointer; z-index: 2; }
 .room .roomname {
-    position: absolute; inset: 0; display: grid; place-items: center;
-    text-align: center; color: #e0f2fe; font-weight: 700; font-size: 11.5px;
-    transform: rotateZ(45deg) rotateX(-54deg) translateZ(20px);
-    text-shadow: 0 0 12px rgba(56, 189, 248, 0.5);
-    pointer-events: none;
+    position: absolute; inset: 0; display: grid; place-items: center; text-align: center; color: #e0f2fe; font-weight: 700; font-size: 11.5px;
+    transform: rotateZ(45deg) rotateX(-54deg) translateZ(20px); text-shadow: 0 0 12px rgba(56, 189, 248, 0.5); pointer-events: none;
 }
 .room .desk {
-    position: absolute; width: 34%; height: 20%; left: 33%; top: 35%;
-    background: #1e293b; border: 1px solid rgba(148, 163, 184, 0.3);
-    transform: translateZ(18px);
-    box-shadow: 0 0 10px rgba(56, 189, 248, 0.15);
+    position: absolute; width: 34%; height: 20%; left: 33%; top: 35%; background: #1e293b; border: 1px solid rgba(148, 163, 184, 0.3);
+    transform: translateZ(18px); box-shadow: 0 0 10px rgba(56, 189, 248, 0.15);
 }
-.room .desk:after {
-    content: ""; position: absolute; width: 20%; height: 50%; left: 40%; top: 25%;
-    background: var(--cyan); box-shadow: 0 0 10px var(--cyan);
-}
+.room .desk:after { content: ""; position: absolute; width: 20%; height: 50%; left: 40%; top: 25%; background: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
 .room.plan { left: 4%; top: 4%; border-color: rgba(56, 189, 248, 0.5); }
 .room.dev { right: 4%; top: 4%; border-color: rgba(129, 140, 248, 0.5); }
 .room.market { left: 4%; bottom: 4%; border-color: rgba(52, 211, 153, 0.5); }
 .room.finance { right: 4%; bottom: 4%; border-color: rgba(251, 191, 36, 0.5); }
 
 .core {
-    position: absolute; left: 38%; top: 38%; width: 24%; height: 24%;
-    background: rgba(15, 23, 42, 0.95);
-    border: 2px solid var(--cyan);
-    box-shadow: 0 0 30px rgba(56, 189, 248, 0.25);
-    transform: translateZ(26px);
-    display: grid; place-items: center; color: var(--cyan);
-    font-size: 11px; font-weight: 800; text-align: center; letter-spacing: 0.1em;
+    position: absolute; left: 38%; top: 38%; width: 24%; height: 24%; background: rgba(15, 23, 42, 0.95);
+    border: 2px solid var(--cyan); box-shadow: 0 0 30px rgba(56, 189, 248, 0.25); transform: translateZ(26px);
+    display: grid; place-items: center; color: var(--cyan); font-size: 11px; font-weight: 800; text-align: center; letter-spacing: 0.1em;
 }
 .core span { transform: rotateZ(45deg) rotateX(-54deg); }
 .office-legend { display: flex; gap: 12px; flex-wrap: wrap; padding: 0 12px 8px; }
 .dept-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 6px; box-shadow: 0 0 6px currentColor; }
 
-/* Dept List & Bottom Grid */
 .dept-list { display: grid; gap: 10px; }
 .dept {
     display: flex; align-items: center; justify-content: space-between; gap: 12px;
-    padding: 12px 14px; border: 1px solid var(--border); border-radius: 12px;
-    background: rgba(15, 23, 42, 0.5); transition: all 0.2s;
+    padding: 12px 14px; border: 1px solid var(--border); border-radius: 12px; background: rgba(15, 23, 42, 0.5); transition: all 0.2s;
 }
 .dept:hover { border-color: rgba(56, 189, 248, 0.3); background: rgba(15, 23, 42, 0.8); }
 .dept strong { display: block; font-size: 12.5px; font-weight: 600; }
@@ -243,8 +177,7 @@ main { max-width: 1400px; margin: auto; padding: 32px 24px; display: grid; gap: 
 .reports { display: grid; gap: 8px; }
 .report {
     display: flex; justify-content: space-between; align-items: center; gap: 12px;
-    padding: 12px 14px; background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border); border-radius: 10px;
-    transition: all 0.2s;
+    padding: 12px 14px; background: rgba(15, 23, 42, 0.5); border: 1px solid var(--border); border-radius: 10px; transition: all 0.2s;
 }
 .report:hover { border-color: rgba(56, 189, 248, 0.3); background: rgba(15, 23, 42, 0.8); }
 .report a { color: #e0f2fe; text-decoration: none; font-size: 12.5px; overflow-wrap: anywhere; font-weight: 500; }
@@ -252,7 +185,6 @@ main { max-width: 1400px; margin: auto; padding: 32px 24px; display: grid; gap: 
 .empty { color: var(--muted); font-size: 12.5px; padding: 16px 0; text-align: center; }
 .footer { color: var(--muted); font-size: 11px; text-align: center; padding: 10px 0 24px; letter-spacing: 0.02em; }
 
-/* Modal */
 #modal {
     position: fixed; inset: 0; background: rgba(3, 7, 18, 0.8); backdrop-filter: blur(8px);
     display: none; align-items: center; justify-content: center; padding: 20px; z-index: 100;
@@ -434,157 +366,173 @@ main { max-width: 1400px; margin: auto; padding: 32px 24px; display: grid; gap: 
 </div>
 
 <script>
-const OWNER="znightzhawk-stack", REPO="laclef", BRANCH="main";
-const departments=[
- {id:"planning",name:"기획실",desc:"경영 요약 · 일일 보고서 · 실행 우선순위",color:"var(--cyan)",state:"기반 구축",detail:"GitHub Actions 기반 AI 일일 보고서 자동 생성 및 그룹사 총괄 기획 파이프라인이 연동되어 있습니다."},
- {id:"development",name:"사업개발실",desc:"부동산 시행 · 타당성 검토 · 수지분석",color:"var(--indigo)",state:"활성화됨",detail:"부동산 개발 시행 타당성, 토지비 역산, 용적률 산출 및 PF 리스크 검토 리포트 자동 생성 기능이 탑재되어 있습니다."},
- {id:"marketing",name:"마케팅실",desc:"캠페인 기획 · 고객 유입 · 전환 분석",color:"var(--emerald)",state:"구축 예정",detail:"마케팅 실적 및 분양/광고 캠페인 데이터 연동을 통한 성과 분석 모듈입니다."},
- {id:"finance",name:"재무·리스크실",desc:"예산 관리 · 현금흐름(Cash Flow) · 계약 검토",color:"var(--amber)",state:"구축 예정",detail:"재무제표, 자금 조달 구조 및 계약서 독소조항 방어 검토를 위한 전문 분석 모듈입니다."}
+const OWNER = "znightzhawk-stack";
+const REPO = "laclef";
+const BRANCH = "main";
+
+const departments = [
+  {id: "planning", name: "기획실", desc: "경영 요약 · 일일 보고서 · 실행 우선순위", color: "var(--cyan)", state: "기반 구축", detail: "GitHub Actions 기반 AI 일일 보고서 자동 생성 및 그룹사 총괄 기획 파이프라인이 연동되어 있습니다."},
+  {id: "development", name: "사업개발실", desc: "부동산 시행 · 타당성 검토 · 수지분석", color: "var(--indigo)", state: "활성화됨", detail: "부동산 개발 시행 타당성, 토지비 역산, 용적률 산출 및 PF 리스크 검토 리포트 자동 생성 기능이 탑재되어 있습니다."},
+  {id: "marketing", name: "마케팅실", desc: "캠페인 기획 · 고객 유입 · 전환 분석", color: "var(--emerald)", state: "구축 예정", detail: "마케팅 실적 및 분양/광고 캠페인 데이터 연동을 통한 성과 분석 모듈입니다."},
+  {id: "finance", name: "재무·리스크실", desc: "예산 관리 · 현금흐름(Cash Flow) · 계약 검토", color: "var(--amber)", state: "구축 예정", detail: "재무제표, 자금 조달 구조 및 계약서 독소조항 방어 검토를 위한 전문 분석 모듈입니다."}
 ];
-const $=id=>document.getElementById(id);
-function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&","<":"<",">":">",'"':""","'":"'"}[c]));}
-function addEvent(title,desc){
-  const feed=$("feed");
-  const item=document.createElement("div");
-  item.className="feed-item";
-  item.innerHTML='<div class="feed-icon">◆</div><div><strong>'+escapeHtml(title)+'</strong><p>'+escapeHtml(desc)+'</p></div>';
+
+const $ = function(id) { return document.getElementById(id); };
+
+function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function(match) {
+        if (match === '&') return '&';
+        if (match === '<') return '<';
+        if (match === '>') return '>';
+        if (match === '"') return '"';
+        if (match === "'") return ''';
+        return match;
+    });
+}
+
+function addEvent(title, desc) {
+  const feed = $("feed");
+  const item = document.createElement("div");
+  item.className = "feed-item";
+  item.innerHTML = '<div class="feed-icon">◆</div><div><strong>' + escapeHtml(title) + '</strong><p>' + escapeHtml(desc) + '</p></div>';
   feed.prepend(item);
-  while(feed.children.length>5) feed.lastChild.remove();
+  while(feed.children.length > 5) {
+    feed.lastChild.remove();
+  }
 }
-function renderDepartments(){
-  $("deptList").innerHTML=departments.map(d=>`
-    <div class="dept">
-      <div>
-        <strong><i class="dept-dot" style="color:${d.color}"></i>${d.name}</strong>
-        <small>${d.desc}</small>
-      </div>
-      <div style="text-align:right">
-        <div class="status ${d.id==="planning"||d.id==="development"?"ok":""}">${d.state}</div>
-        <button data-open="${d.id}">상세보기</button>
-      </div>
-    </div>
-  `).join("");
+
+function renderDepartments() {
+  $("deptList").innerHTML = departments.map(function(d) {
+    var isOk = (d.id === "planning" || d.id === "development") ? "ok" : "";
+    return '<div class="dept"><div><strong><i class="dept-dot" style="color:' + d.color + '"></i>' + d.name + '</strong><small>' + d.desc + '</small></div><div style="text-align:right"><div class="status ' + isOk + '">' + d.state + '</div><button data-open="' + d.id + '">상세보기</button></div></div>';
+  }).join("");
 }
-function selectDept(id){
-  const d=departments.find(x=>x.id===id);
-  if(!d)return;
-  $("selectedName").textContent=d.name;
-  $("selectedDesc").textContent=d.desc;
-  $("selectedData").textContent=d.detail;
-  $("modalTitle").textContent=d.name;
-  $("modalText").textContent=d.detail;
+
+function selectDept(id) {
+  const d = departments.find(function(x) { return x.id === id; });
+  if (!d) return;
+  $("selectedName").textContent = d.name;
+  $("selectedDesc").textContent = d.desc;
+  $("selectedData").textContent = d.detail;
+  $("modalTitle").textContent = d.name;
+  $("modalText").textContent = d.detail;
   $("modal").classList.add("open");
 }
-function renderBars(){
-  const vals=[["기획실",90],["사업개발실",85],["마케팅실",30],["재무·리스크실",25]];
-  $("bars").innerHTML=vals.map(v=>`
-    <div class="bar-row">
-      <span>${v[0]}</span>
-      <div class="bar"><i style="width:${v[1]}%"></i></div>
-      <b>${v[1]}%</b>
-    </div>
-  `).join("");
+
+function renderBars() {
+  const vals = [["기획실", 90], ["사업개발실", 85], ["마케팅실", 30], ["재무·리스크실", 25]];
+  $("bars").innerHTML = vals.map(function(v) {
+    return '<div class="bar-row"><span>' + v[0] + '</span><div class="bar"><i style="width:' + v[1] + '%"></i></div><b>' + v[1] + '%</b></div>';
+  }).join("");
 }
-async function getJson(url){
-  const r=await fetch(url,{headers:{"Accept":"application/vnd.github+json"},cache:"no-store"});
-  if(!r.ok)throw new Error("HTTP "+r.status);
+
+async function getJson(url) {
+  const r = await fetch(url, {headers: {"Accept": "application/vnd.github+json"}, cache: "no-store"});
+  if (!r.ok) throw new Error("HTTP " + r.status);
   return r.json();
 }
-function reportUrl(path){
-  return "https://github.com/"+OWNER+"/"+REPO+"/blob/"+BRANCH+"/"+path.split("/").map(encodeURIComponent).join("/");
+
+function reportUrl(path) {
+  return "https://github.com/" + OWNER + "/" + REPO + "/blob/" + BRANCH + "/" + path.split("/").map(encodeURIComponent).join("/");
 }
-async function loadReports(){
- const container=$("reports");
- try{
-  const files=await getJson("https://api.github.com/repos/"+OWNER+"/"+REPO+"/contents/reports?ref="+BRANCH);
-  if(!Array.isArray(files))throw new Error("reports 폴더를 읽을 수 없습니다.");
-  const md=files.filter(f=>f.type==="file"&&f.name.endsWith(".md")).sort((a,b)=>b.name.localeCompare(a.name)).slice(0,8);
-  $("reportCount").textContent=files.filter(f=>f.type==="file"&&f.name.endsWith(".md")).length;
-  $("reportCountFoot").textContent="GitHub 저장소 연동됨";
-  $("modeValue").textContent="LIVE";
-  $("modeValue").className="value green";
-  $("modeFoot").textContent="실제 데이터 동기화 완료";
-  $("sourceChip").textContent="GitHub 라이브 연동";
-  $("sourceChip").className="chip good";
-  $("dataNotice").innerHTML='<span>✨</span><div>GitHub 저장소와 성공적으로 동기화되었습니다. 최신 타당성 검토 및 그룹사 리포트를 즉시 조회하실 수 있습니다.</div>';
-  $("reportsTag").textContent="실제 파일 목록";
-  $("reportsTag").className="tag live";
-  container.innerHTML="";
-  if(!md.length){
-    container.innerHTML='<div class="empty">reports 폴더에 생성된 보고서가 없습니다. Actions에서 워크플로를 실행해 주세요.</div>';
+
+async function loadReports() {
+ const container = $("reports");
+ try {
+  const files = await getJson("https://api.github.com/repos/" + OWNER + "/" + REPO + "/contents/reports?ref=" + BRANCH);
+  if (!Array.isArray(files)) throw new Error("reports 폴더를 읽을 수 없습니다.");
+  const md = files.filter(function(f) { return f.type === "file" && f.name.endsWith(".md"); }).sort(function(a,b) { return b.name.localeCompare(a.name); }).slice(0,8);
+  $("reportCount").textContent = files.filter(function(f) { return f.type === "file" && f.name.endsWith(".md"); }).length;
+  $("reportCountFoot").textContent = "GitHub 저장소 연동됨";
+  $("modeValue").textContent = "LIVE";
+  $("modeValue").className = "value green";
+  $("modeFoot").textContent = "실제 데이터 동기화 완료";
+  $("sourceChip").textContent = "GitHub 라이브 연동";
+  $("sourceChip").className = "chip good";
+  $("dataNotice").innerHTML = '<span>✨</span><div>GitHub 저장소와 성공적으로 동기화되었습니다. 최신 타당성 검토 및 그룹사 리포트를 즉시 조회하실 수 있습니다.</div>';
+  $("reportsTag").textContent = "실제 파일 목록";
+  $("reportsTag").className = "tag live";
+  container.innerHTML = "";
+  if (!md.length) {
+    container.innerHTML = '<div class="empty">reports 폴더에 생성된 보고서가 없습니다. Actions에서 워크플로를 실행해 주세요.</div>';
     return;
   }
-  md.forEach(f=>{
-    const el=document.createElement("div");
-    el.className="report";
-    const a=document.createElement("a");
-    a.href=reportUrl(f.path);
-    a.target="_blank";
-    a.rel="noopener";
-    a.textContent=f.name;
-    const t=document.createElement("span");
-    t.className="tag live";
-    t.textContent="리포트 파일";
-    el.append(a,t);
+  md.forEach(function(f) {
+    const el = document.createElement("div");
+    el.className = "report";
+    const a = document.createElement("a");
+    a.href = reportUrl(f.path);
+    a.target = "_blank";
+    a.rel = "noopener";
+    a.textContent = f.name;
+    const t = document.createElement("span");
+    t.className = "tag live";
+    t.textContent = "리포트 파일";
+    el.append(a, t);
     container.append(el);
   });
-  addEvent("보고서 목록 동기화 성공",md.length+"개 파일 로드 완료");
- }catch(e){
-  $("reportCount").textContent="확인 중";
-  $("reportCountFoot").textContent="API 제한 또는 비공개 저장소";
-  $("modeValue").textContent="DEMO";
-  $("modeValue").className="value";
-  $("modeFoot").textContent="예시 데이터 모드";
-  $("sourceChip").textContent="오프라인/스탠바이";
-  $("sourceChip").className="chip";
-  $("reportsTag").textContent="연결 대기";
-  $("reportsTag").className="tag demo";
-  container.innerHTML='<div class="empty">저장소 보고서 목록을 가져오는 중이거나 API 접근이 제한되었습니다. Actions 실행 후 새로고침을 확인해 주세요.</div>';
-  addEvent("저장소 연동 대기",e.message);
+  addEvent("보고서 목록 동기화 성공", md.length + "개 파일 로드 완료");
+ } catch(e) {
+  $("reportCount").textContent = "확인 중";
+  $("reportCountFoot").textContent = "API 제한 또는 비공개 저장소";
+  $("modeValue").textContent = "DEMO";
+  $("modeValue").className = "value";
+  $("modeFoot").textContent = "예시 데이터 모드";
+  $("sourceChip").textContent = "오프라인/스탠바이";
+  $("sourceChip").className = "chip";
+  $("reportsTag").textContent = "연결 대기";
+  $("reportsTag").className = "tag demo";
+  container.innerHTML = '<div class="empty">저장소 보고서 목록을 가져오는 중이거나 API 접근이 제한되었습니다. Actions 실행 후 새로고침을 확인해 주세요.</div>';
+  addEvent("저장소 연동 대기", e.message);
  }
 }
-async function loadRuns(){
- try{
-  const d=await getJson("https://api.github.com/repos/"+OWNER+"/"+REPO+"/actions/runs?per_page=1");
-  const r=d.workflow_runs&&d.workflow_runs[0];
-  if(!r)throw new Error("워크플로 실행 이력 없음");
-  const success=r.conclusion==="success";
-  $("runState").textContent=r.status==="in_progress"?"실행 중":success?"성공":r.conclusion||r.status;
-  $("runState").className="value "+(success?"green":"");
-  $("runDate").textContent=new Date(r.updated_at).toLocaleString("ko-KR",{timeZone:"Asia/Seoul"})+" · "+r.name;
-  $("eventTag").textContent="GitHub Actions";
-  addEvent("최근 워크플로 상태",r.name+" ("+(r.conclusion||r.status)+")");
- }catch(e){
-  $("runState").textContent="대기 중";
-  $("runDate").textContent="워크플로 이력 확인 필요";
-  addEvent("워크플로 미조회",e.message);
+
+async function loadRuns() {
+ try {
+  const d = await getJson("https://api.github.com/repos/" + OWNER + "/" + REPO + "/actions/runs?per_page=1");
+  const r = d.workflow_runs && d.workflow_runs[0];
+  if (!r) throw new Error("워크플로 실행 이력 없음");
+  const success = r.conclusion === "success";
+  $("runState").textContent = r.status === "in_progress" ? "실행 중" : success ? "성공" : r.conclusion || r.status;
+  $("runState").className = "value " + (success ? "green" : "");
+  $("runDate").textContent = new Date(r.updated_at).toLocaleString("ko-KR", {timeZone: "Asia/Seoul"}) + " · " + r.name;
+  $("eventTag").textContent = "GitHub Actions";
+  addEvent("최근 워크플로 상태", r.name + " (" + (r.conclusion || r.status) + ")");
+ } catch(e) {
+  $("runState").textContent = "대기 중";
+  $("runDate").textContent = "워크플로 이력 확인 필요";
+  addEvent("워크플로 미조회", e.message);
  }
 }
-function refresh(){
-  addEvent("대시보드 새로고침","GitHub 데이터 및 Actions 상태를 다시 조회합니다.");
+
+function refresh() {
+  addEvent("대시보드 새로고침", "GitHub 데이터 및 Actions 상태를 다시 조회합니다.");
   loadReports();
   loadRuns();
 }
-function clock(){
-  $("clock").textContent=new Date().toLocaleTimeString("ko-KR",{timeZone:"Asia/Seoul",hour12:false})+" KST";
+
+function clock() {
+  $("clock").textContent = new Date().toLocaleTimeString("ko-KR", {timeZone: "Asia/Seoul", hour12: false}) + " KST";
 }
-document.addEventListener("click",e=>{
-  const b=e.target.closest("[data-dept],[data-open]");
-  if(b) selectDept(b.dataset.dept||b.dataset.open);
+
+document.addEventListener("click", function(e) {
+  const b = e.target.closest("[data-dept],[data-open]");
+  if (b) selectDept(b.dataset.dept || b.dataset.open);
 });
-$("closeModal").onclick=()=>$("modal").classList.remove("open");
-$("modal").onclick=e=>{if(e.target.id==="modal")$("modal").classList.remove("open");};
-$("rotateBtn").onclick=()=>{
+
+$("closeModal").onclick = function() { $("modal").classList.remove("open"); };
+$("modal").onclick = function(e) { if (e.target.id === "modal") $("modal").classList.remove("open"); };
+$("rotateBtn").onclick = function() {
   $("iso").classList.toggle("spin");
-  addEvent("가상 사무실 시점 변경","아이소메트릭 3D 공간을 회전했습니다.");
+  addEvent("가상 사무실 시점 변경", "아이소메트릭 3D 공간을 회전했습니다.");
 };
-$("refreshBtn").onclick=refresh;
+$("refreshBtn").onclick = refresh;
 
 renderDepartments();
 renderBars();
 clock();
-setInterval(clock,1000);
-addEvent("통합 관제실 가동","웹 대시보드가 성공적으로 로드되었습니다.");
+setInterval(clock, 1000);
+addEvent("통합 관제실 가동", "웹 대시보드가 성공적으로 로드되었습니다.");
 refresh();
 </script>
 </body>
