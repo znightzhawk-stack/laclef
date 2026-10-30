@@ -1,49 +1,150 @@
-name: AI Office Command
+import datetime
+import glob
+import json
+import os
+import urllib.request
 
-on:
-  workflow_dispatch:
-    inputs:
-      task:
-        description: '업무 지시 내용 (예: 서울 역세권 주거용 오피스텔 부지 매입 타당성 검토)'
-        required: true
-        default: '서울 역세권 주거용 오피스텔 시행 사업성 검토'
 
-jobs:
-  run-command:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
+def generate_executive_report():
+  api_key = os.environ.get("GEMINI_API_KEY")
+  if not api_key:
+    raise ValueError(
+        "❌ [CRITICAL ERROR] GEMINI_API_KEY가 GitHub Secrets에 설정되어 있지"
+        " 않습니다! 깃허브 설정에서 시크릿을 등록해주세요."
+    )
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+  prompt = (
+      "(주)큐에이치앤씨 이기석 팀장을 위한 엔터프라이즈급 경영 및 포트폴리오"
+      " 전략 보고서를 작성해주세요. 미국 증시(NVDA, AVGO, ALAB) 및 부동산 개발 사업"
+      " 현황 포함."
+  )
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
+  print("🤖 Gemini API 호출 중...")
+  url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
+  headers = {"Content-Type": "application/json"}
+  data = {"contents": [{"parts": [{"text": prompt}]}]}
 
-      - name: Install Google GenAI SDK
-        run: pip install google-genai
+  req = urllib.request.Request(
+      url, data=json.dumps(data).encode("utf-8"), headers=headers, method="POST"
+  )
 
-      - name: Run AI Office Command
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          OFFICE_TASK: ${{ github.event.inputs.task }}
-        run: python scripts/ai_office_command.py
+  try:
+    with urllib.request.urlopen(req, timeout=30) as response:
+      result = json.loads(response.read().decode("utf-8"))
+      report_text = (
+          result.get("candidates", [{}])[0]
+          .get("content", {})
+          .get("parts", [{}])[0]
+          .get("text", "")
+      )
+      if not report_text:
+        raise ValueError(
+            "API 응답은 정상이나 텍스트 내용이 비어 있습니다. 응답 데이터:"
+            f" {result}"
+        )
+  except urllib.error.HTTPError as e:
+    error_body = e.read().decode("utf-8")
+    raise RuntimeError(
+        f"❌ [HTTP Error {e.code}] Gemini API 통신 거부됨: {error_body}"
+    )
 
-      - name: Commit and push generated reports and dashboard data
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add reports/ docs/ index.html
-          git diff --staged --quiet || git commit -m "feat: auto-generate developer-grade feasibility report & update dashboard [skip ci]"
-          git push
+  os.makedirs("reports", exist_ok=True)
+  timestamp_str = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+  filename = f"reports/office-{timestamp_str}.md"
+  with open(filename, "w", encoding="utf-8") as f:
+    f.write(report_text)
+  print(f"Successfully generated real AI report: {filename}")
 
-      - name: Commit and Push Reports & Dashboard
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add index.html reports/ docs/
-          git commit -m "chore: auto-generate executive report and dashboard [skip ci]" || exit 0
-          git push
+
+def update_static_dashboard():
+  reports_dir = "reports"
+  os.makedirs(reports_dir, exist_ok=True)
+  report_files = sorted(
+      glob.glob(os.path.join(reports_dir, "*.md")), reverse=True
+  )
+
+  card_items = ""
+  for i, filepath in enumerate(report_files):
+    filename = os.path.basename(filepath)
+    is_latest = i == 0
+    badge = (
+        '<span style="background: #3b82f6; color: white; padding: 2px 8px;'
+        ' border-radius: 4px; font-size: 0.75rem; font-weight:'
+        ' bold;">LATEST</span>'
+        if is_latest
+        else '<span style="background: #334155; color: #94a3b8; padding: 2px'
+        ' 8px; border-radius: 4px; font-size: 0.75rem;">ARCHIVE</span>'
+    )
+    border_style = (
+        "border-left: 4px solid #3b82f6;"
+        if is_latest
+        else "border-left: 4px solid #475569;"
+    )
+
+    card_items += f"""
+        <div style="background: #1e293b; border-radius: 10px; padding: 20px; margin-bottom: 15px; {border_style} box-shadow: 0 4px 6px rgba(0,0,0,0.2); display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                    {badge}
+                    <span style="color: #cbd5e1; font-weight: bold; font-size: 1.05rem;">{filename}</span>
+                </div>
+                <p style="color: #94a3b8; margin: 0; font-size: 0.85rem;">(주)큐에이치앤씨 타당성 및 글로벌 포트폴리오 관제 보고서</p>
+            </div>
+            <a href="reports/{filename}" target="_blank" style="background: #2563eb; color: white; padding: 10px 18px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 0.9rem; white-space: nowrap;">보고서 열람 ↗</a>
+        </div>
+        """
+
+  html_content = f"""<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LACLEF Executive Command Center</title>
+    <style>
+        body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 40px; }}
+        .container {{ max-width: 1000px; margin: 0 auto; }}
+        .header-card {{ background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid #334155; padding: 30px; border-radius: 14px; box-shadow: 0 10px 25px rgba(0,0,0,0.4); margin-bottom: 30px; }}
+        h1 {{ color: #38bdf8; margin: 0 0 10px 0; font-size: 1.8rem; display: flex; align-items: center; gap: 12px; }}
+        .status-badge {{ background: #065f46; color: #34d399; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; display: inline-flex; align-items: center; gap: 6px; }}
+        .status-dot {{ width: 8px; height: 8px; background: #34d399; border-radius: 50%; box-shadow: 0 0 8px #34d399; }}
+        .section-title {{ color: #e2e8f0; font-size: 1.2rem; margin: 30px 0 15px 0; border-left: 4px solid #38bdf8; padding-left: 10px; }}
+        .footer {{ margin-top: 40px; text-align: center; color: #64748b; font-size: 0.85rem; border-top: 1px solid #1e293b; padding-top: 20px; }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-card">
+            <h1>🏢 LACLEF Executive Command Center</h1>
+            <p style="color: #94a3b8; margin: 0 0 15px 0;">(주)큐에이치앤씨 실시간 부동산 개발 및 글로벌 포트폴리오 관제실</p>
+            <div class="status-badge">
+                <div class="status-dot"></div> SYSTEM ONLINE • Live AI Generation Mode
+            </div>
+        </div>
+        
+        <div class="section-title">📊 실시간 경영 관제 보고서 아카이브</div>
+        <div>
+            {card_items if card_items else '<p style="color: #94a3b8; text-align: center; padding: 40px;">생성된 관제 보고서가 없습니다.</p>'}
+        </div>
+        
+        <div class="footer">
+            © 2026 LACLEF Enterprise • Designed for Executive Operations & Strategy
+        </div>
+    </div>
+</body>
+</html>
+"""
+
+  with open("index.html", "w", encoding="utf-8") as f:
+    f.write(html_content)
+  print("Successfully updated Command Center index.html.")
+
+
+def main():
+  print("Starting LACLEF Command Center workflow...")
+  generate_executive_report()
+  update_static_dashboard()
+  print("Command Center workflow completed successfully.")
+
+
+if __name__ == "__main__":
+  main()
