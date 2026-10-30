@@ -434,7 +434,7 @@ main { max-width: 1400px; margin: auto; padding: 32px 24px; display: grid; gap: 
 </div>
 
 <script>
-const OWNER="znighthawk-stack", REPO="laclef", BRANCH="main";
+const OWNER="znightzhawk-stack", REPO="laclef", BRANCH="main";
 const departments=[
  {id:"planning",name:"기획실",desc:"경영 요약 · 일일 보고서 · 실행 우선순위",color:"var(--cyan)",state:"기반 구축",detail:"GitHub Actions 기반 AI 일일 보고서 자동 생성 및 그룹사 총괄 기획 파이프라인이 연동되어 있습니다."},
  {id:"development",name:"사업개발실",desc:"부동산 시행 · 타당성 검토 · 수지분석",color:"var(--indigo)",state:"활성화됨",detail:"부동산 개발 시행 타당성, 토지비 역산, 용적률 산출 및 PF 리스크 검토 리포트 자동 생성 기능이 탑재되어 있습니다."},
