@@ -384,7 +384,7 @@ main { max-width: 1400px; margin: auto; padding: 32px 24px; display: grid; gap: 
 </div>
 
 <script>
-const OWNER = "znighthawk-stack";
+const OWNER = "znightzhawk-stack";
 const REPO = "laclef";
 const BRANCH = "main";
 
