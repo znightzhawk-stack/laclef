@@ -1,17 +1,15 @@
-name: LACLEF Executive Command Center Workflow
+name: LACLEF Executive Command Center
 
 on:
   push:
     branches: [ main ]
-  workflow_dispatch: 
+  workflow_dispatch:
   schedule:
-    - cron: '0 22 * * *' # 매일 밤 (UTC 기준, 한국 시간 아침 7시) 자동 실행되도록 설정
+    - cron: '0 22 * * *'
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    
-    
     permissions:
       contents: write
 
@@ -27,7 +25,7 @@ jobs:
       - name: Run AI Office Command Script
         run: python scripts/ai_office_command.py
         env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }} 
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
       - name: Commit and Push Generated Reports & Dashboard
         run: |
