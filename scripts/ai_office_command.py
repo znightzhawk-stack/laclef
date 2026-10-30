@@ -568,26 +568,19 @@ def main():
 
     client = genai.Client(api_key=API_KEY)
 
+    # 💡 프롬프트 크기를 최적화하여 서버 타임아웃(Disconnect) 방지
     prompt = f"""
-당신은 월가 기관투자자 리서치 센터 및 글로벌 디벨로퍼 그룹사의 수석 데이터/전략 애널리스트입니다.
-대표님께서 내리신 아래의 업무 지시에 대해, 단순한 서술형 글이 아니라 **엔지니어링 수치, KPI 스코어카드, 정량적 데이터 테이블, 리스크 매트릭스**가 촘촘히 박힌 '엔터프라이즈급 정밀 분석 보고서'를 작성하세요.
+당신은 그룹사 수석 전략 애널리스트입니다. 아래 업무 지시에 대해 엔지니어링 수치와 KPI가 포함된 정밀 보고서를 작성하세요.
 
-반드시 다음 양식과 요소를 마크다운 테이블 및 블록 형태로 포함하세요:
-
-1. **[EXECUTIVE KPI SCORECARD]** (핵심 지표 요약 테이블)
-   - 프로젝트 명칭 / 목표 수익률(IRR/ROE) / 예상 총사업비(CAPEX) / 리스크 등급 (A~D) / 종합 판정
-2. **[QUANTITATIVE METRICS & FINANCIAL BREAKDOWN]** (정량적 수치 분석 및 자금/원가 구조 테이블)
-   - 항목별 추정 금액, 비중(%), 평당 단가, 민감도 분석 수치 등을 마크다운 테이블(`| 항목 | 금액 | 비중 | 비고 |`)로 반드시 상세히 시각화
-3. **[ENGINEERING & TECHNICAL FEASIBILITY]** (부문별 공학적/구조적 검토 지표)
-   - 용적률, 건폐율, 주차대수 산정, 하중 및 설계 가설계(Mass Study) 지표
-4. **[RISK MATRIX & MITIGATION PROTOCOL]** (리스크 매트릭스)
-   - 리스크 요인 / 발생 확률 (High/Med/Low) / 영향도 / 방어 조항 및 대응 프로토콜
+1. [EXECUTIVE KPI SCORECARD]: 프로젝트 명, IRR/ROE, CAPEX, 리스크 등급, 종합 판정
+2. [QUANTITATIVE METRICS]: 자금 및 원가 구조 테이블 (`| 항목 | 금액 | 비중 | 비고 |`)
+3. [ENGINEERING FEASIBILITY]: 용적률, 건폐율, 주차대수 산정 지표
+4. [RISK MATRIX]: 리스크 요인, 발생 확률, 방어 조항
 
 업무 지시:
 {TASK}
 """
 
-    # 💡 gemini-3.8-flash 모델 사용 및 일시적 네트워크/서버 끊김(Disconnect) 대응 재시도(Retry) 로직
     model_name = 'gemini-3.8-flash'
     response = None
     max_retries = 3
@@ -605,9 +598,9 @@ def main():
         except Exception as e:
             print(f"Attempt {attempt} failed with error: {e}")
             if attempt < max_retries:
-                time.sleep(4)  # 4초 대기 후 재시도
+                time.sleep(5)  # 5초 간격으로 재시도
             else:
-                raise RuntimeError(f"모든 AI 모델 호출(재시도 포함)이 실패했습니다. (마지막 에러: {e})")
+                raise RuntimeError(f"모든 AI 모델 호출이 실패했습니다. (마지막 에러: {e})")
 
     if not response or not response.text:
         raise RuntimeError("AI 모델로부터 응답 내용을 받아오지 못했습니다.")
